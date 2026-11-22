@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+    <div class="subject-grid">
+    <button onclick="addSubject();">
+        Add subject
+    </button>
+     </div>
+
+
+     <div>
+        <p>GPA: <span id="gpa">0.00</span></p>
+     </div>
+
+
+     <script>
+        const subjectOptions = [
+            'Mechanical Properties of Matter & Thermodynamics',
+            'Calculus I',
+            'Engineering Mechanics – Dynamics',
+            'Chemistry for Engineers',
+            'Engineering Graphics',
+            'Information Technology',
+            'Proficiency and Capacity Building',
+            'Critical and Creative Thinking',
+            'Calculus II',
+            'Engineering Mechanics – Statics',
+            'Electricity and Magnetism',
+            'Introduction to Probability and Statistics',
+            'Thermodynamics',
+            'Materials Science',
+            'Fundamentals of Manufacturing Engineering'
+        ];
+
+        const subjectList = document.createElement('datalist');
+        subjectList.id = 'subject-options';
+        subjectList.innerHTML = subjectOptions
+            .map(subject => `<option value="${subject}"></option>`)
+            .join('');
+        document.body.appendChild(subjectList);
+
+        function addSubject() {
+            const subjectGrid = document.querySelector('.subject-grid');
+            const newSubject = document.createElement('div');
+            newSubject.classList.add('subject');
+            newSubject.innerHTML = `
+                <input type="text" list="subject-options" placeholder="Subject Name" aria-label="Subject">
+                <input type="number" placeholder="Grade (0 - 100)" oninput="calculateGPA();">
+                <input type="number" placeholder="Credits (1 - 3)" oninput="calculateGPA();">
+                <button onclick="removeSubject(this);">Remove</button>
+                <span>Grade: <span class="sub-gpa">0.00</span></span>
+                
+
+            `;
+            subjectGrid.appendChild(newSubject);
+        }
+
+        function removeSubject(button) {
+            const subject = button.parentElement;
+            subject.remove();
+        }
+
+
+
+
+
+
+
+        function calculateGPA() {
+            const subjects = document.querySelectorAll('.subject');
+            let totalGradePoints = 0;
+            let totalCredits = 0;
+
+            subjects.forEach(subject => {
+                const gradeInput = subject.querySelector('input[type="number"]:nth-child(2)');
+                const creditsInput = subject.querySelector('input[type="number"]:nth-child(3)');
+
+
+                let grade = 0.00;
+                if (parseFloat(gradeInput.value) >= 93) {
+                    grade = 4.00;
+                } 
+                else if (parseFloat(gradeInput.value) < 93 && parseFloat(gradeInput.value) >= 89){
+                    grade = 3.70;
+                }
+                else if (parseFloat(gradeInput.value) < 89 && parseFloat(gradeInput.value) >= 84){
+                    grade = 3.30;
+                }
+                else if (parseFloat(gradeInput.value) < 84 && parseFloat(gradeInput.value) >= 80){
+                    grade = 3.00;
+                }
+                else if (parseFloat(gradeInput.value) < 80 && parseFloat(gradeInput.value) >= 76){
+                    grade = 2.70;
+                }
+                else if (parseFloat(gradeInput.value) < 76 && parseFloat(gradeInput.value) >= 73){
+                    grade = 2.30;
+                }
+                else if (parseFloat(gradeInput.value) < 73 && parseFloat(gradeInput.value) >= 70){
+                    grade = 2.00;
+                }
+                else if (parseFloat(gradeInput.value) < 70 && parseFloat(gradeInput.value) >= 67){
+                    grade = 1.70;
+                }
+                else if (parseFloat(gradeInput.value) < 67 && parseFloat(gradeInput.value) >= 64){
+                    grade = 1.30;
+                }
+                else if (parseFloat(gradeInput.value) < 64 && parseFloat(gradeInput.value) >= 60){
+                    grade = 1.00;
+                }
+                else {
+                    grade = 0.00;
+                }
+
+                 let subjectGrade = subject.querySelector('.sub-gpa');
+                 subjectGrade.textContent = grade.toFixed(2);
+                 
+              
+                const credits = parseFloat(creditsInput.value);
+
+                if (!isNaN(grade) && !isNaN(credits)) {
+                    totalGradePoints += grade * credits;
+                    totalCredits += credits;
+                }
+            });
+
+            const gpa = totalCredits > 0 ? (totalGradePoints / totalCredits).toFixed(2) : '0.00';
+            document.getElementById('gpa').textContent = gpa;
+        }
+     </script>
+</body>
+</html>
